@@ -1,19 +1,30 @@
-# Ride Hailing SQL Project
+# Ride Hailing Analytics SQL Project
 
-This project analyzes ride-hailing business data using SQL.
+##  Project Overview
+This project simulates a real-world ride-hailing database system.  
+The goal is to analyze drivers, riders, trips, and payments using SQL.
 
-## Tables
-- drivers
-- riders
-- trips
-- payments
+##  Tools Used
+- MySQL Workbench
+- SQL (CTE, Window Functions, Joins, Aggregations)
 
-## SQL Concepts Used
-- Joins
-- Group By
-- Window Functions
-- Subqueries
-- KPIs
+##  Dataset
+- Drivers: 10 records
+- Riders: 10 records
+- Trips: 30+ records
+- Payments: 30+ records
 
-## Author
+##  Key Analysis Performed
+- Driver revenue ranking
+- Top riders by spending
+- Peak hour trip demand
+- City-wise revenue analysis
+- Cancellation rate
+- Moving average revenue trend
+- Surge pricing simulation
+
+##  Screenshots
+Screenshots of database schema and query results are included.
+
+##  Author
 Anne P
