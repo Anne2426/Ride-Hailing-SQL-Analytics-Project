@@ -1,0 +1,359 @@
+#Average Daily Revenue per Driver
+
+-- 1️⃣ Create Database
+CREATE DATABASE IF NOT EXISTS ride_hailing_analytics_db;
+USE ride_hailing_analytics_db;
+
+-- 2️⃣ Create Tables
+
+-- Drivers Table
+CREATE TABLE drivers (
+    driver_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    city VARCHAR(50),
+    rating FLOAT,
+    join_date DATE
+);
+
+-- Riders Table
+CREATE TABLE riders (
+    rider_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    city VARCHAR(50),
+    signup_date DATE
+);
+
+-- Trips Table
+CREATE TABLE trips (
+    trip_id INT PRIMARY KEY,
+    rider_id INT,
+    driver_id INT,
+    start_time DATETIME,
+    end_time DATETIME,
+    distance_km FLOAT,
+    status VARCHAR(20),
+    city VARCHAR(50),
+    FOREIGN KEY (rider_id) REFERENCES riders(rider_id),
+    FOREIGN KEY (driver_id) REFERENCES drivers(driver_id)
+);
+
+-- Payments Table
+CREATE TABLE payments (
+    payment_id INT PRIMARY KEY,
+    trip_id INT,
+    amount DECIMAL(10,2),
+    payment_method VARCHAR(20),
+    FOREIGN KEY (trip_id) REFERENCES trips(trip_id)
+);
+
+-- 3️⃣ Insert Data – Drivers (10)
+INSERT INTO drivers VALUES
+(1,'Ravi','Chennai',4.8,'2022-01-10'),
+(2,'Arun','Bangalore',4.6,'2021-05-20'),
+(3,'Kumar','Hyderabad',4.7,'2020-11-15'),
+(4,'Suresh','Chennai',4.5,'2019-09-01'),
+(5,'Ajith','Bangalore',4.9,'2023-02-12'),
+(6,'Manoj','Mumbai',4.4,'2021-08-30'),
+(7,'Vijay','Delhi',4.6,'2020-03-14'),
+(8,'Rahul','Pune',4.7,'2022-07-25'),
+(9,'Anil','Chennai',4.3,'2018-12-10'),
+(10,'Deepak','Bangalore',4.8,'2023-01-05');
+
+-- 4️⃣ Insert Data – Riders (10)
+INSERT INTO riders VALUES
+(1,'Anu','Chennai','2022-03-01'),
+(2,'Priya','Bangalore','2021-06-12'),
+(3,'Ramesh','Hyderabad','2020-09-10'),
+(4,'Sneha','Mumbai','2023-01-01'),
+(5,'Karthik','Delhi','2019-11-20'),
+(6,'Divya','Chennai','2022-05-15'),
+(7,'Sathish','Pune','2021-10-10'),
+(8,'Meena','Bangalore','2020-07-07'),
+(9,'Raj','Mumbai','2022-12-12'),
+(10,'Neha','Delhi','2023-03-05');
+
+-- 5️⃣ Insert Data – Trips (30)
+INSERT INTO trips VALUES
+(1,1,1,'2024-01-10 08:00:00','2024-01-10 08:30:00',12.5,'completed','Chennai'),
+(2,2,2,'2024-01-10 09:00:00','2024-01-10 09:20:00',8.2,'completed','Bangalore'),
+(3,3,3,'2024-01-11 10:00:00','2024-01-11 10:45:00',15.0,'completed','Hyderabad'),
+(4,4,6,'2024-01-11 18:00:00','2024-01-11 18:40:00',20.5,'completed','Mumbai'),
+(5,5,7,'2024-01-12 20:00:00','2024-01-12 20:30:00',10.2,'cancelled','Delhi'),
+(6,6,4,'2024-01-12 07:30:00','2024-01-12 07:50:00',6.0,'completed','Chennai'),
+(7,7,8,'2024-01-13 12:00:00','2024-01-13 12:25:00',9.0,'completed','Pune'),
+(8,8,2,'2024-01-13 14:00:00','2024-01-13 14:30:00',11.5,'completed','Bangalore'),
+(9,9,6,'2024-01-14 16:00:00','2024-01-14 16:35:00',14.3,'completed','Mumbai'),
+(10,10,7,'2024-01-14 19:00:00','2024-01-14 19:45:00',18.4,'completed','Delhi'),
+(11,1,9,'2024-01-15 09:00:00','2024-01-15 09:25:00',7.0,'completed','Chennai'),
+(12,2,10,'2024-01-15 21:00:00','2024-01-15 21:20:00',6.5,'completed','Bangalore'),
+(13,3,3,'2024-01-16 08:00:00','2024-01-16 08:50:00',16.2,'completed','Hyderabad'),
+(14,4,6,'2024-01-16 22:00:00','2024-01-16 22:30:00',12.0,'cancelled','Mumbai'),
+(15,5,7,'2024-01-17 11:00:00','2024-01-17 11:40:00',13.5,'completed','Delhi'),
+(16,6,1,'2024-01-17 17:00:00','2024-01-17 17:20:00',5.4,'completed','Chennai'),
+(17,7,8,'2024-01-18 10:00:00','2024-01-18 10:35:00',14.0,'completed','Pune'),
+(18,8,2,'2024-01-18 15:00:00','2024-01-18 15:20:00',7.8,'completed','Bangalore'),
+(19,9,6,'2024-01-19 13:00:00','2024-01-19 13:50:00',19.0,'completed','Mumbai'),
+(20,10,7,'2024-01-19 23:00:00','2024-01-19 23:30:00',11.0,'completed','Delhi'),
+(21,1,4,'2024-01-20 06:00:00','2024-01-20 06:30:00',9.5,'completed','Chennai'),
+(22,2,5,'2024-01-20 18:00:00','2024-01-20 18:25:00',8.8,'completed','Bangalore'),
+(23,3,3,'2024-01-21 09:00:00','2024-01-21 09:45:00',17.3,'completed','Hyderabad'),
+(24,4,6,'2024-01-21 20:00:00','2024-01-21 20:40:00',21.0,'completed','Mumbai'),
+(25,5,7,'2024-01-22 07:00:00','2024-01-22 07:20:00',6.9,'completed','Delhi'),
+(26,6,9,'2024-01-22 12:00:00','2024-01-22 12:35:00',12.7,'completed','Chennai'),
+(27,7,8,'2024-01-23 16:00:00','2024-01-23 16:30:00',10.0,'completed','Pune'),
+(28,8,10,'2024-01-23 19:00:00','2024-01-23 19:25:00',7.5,'completed','Bangalore'),
+(29,9,6,'2024-01-24 14:00:00','2024-01-24 14:55:00',22.0,'completed','Mumbai'),
+(30,10,7,'2024-01-24 21:00:00','2024-01-24 21:35:00',15.0,'completed','Delhi');
+
+-- 6️⃣ Insert Data – Payments (30)
+INSERT INTO payments VALUES
+(1,1,350,'UPI'),(2,2,220,'Card'),(3,3,450,'UPI'),(4,4,600,'Cash'),(5,5,0,'Cancelled'),
+(6,6,180,'UPI'),(7,7,250,'Card'),(8,8,300,'UPI'),(9,9,420,'Cash'),(10,10,500,'UPI'),
+(11,11,200,'Card'),(12,12,210,'UPI'),(13,13,480,'UPI'),(14,14,0,'Cancelled'),(15,15,370,'Cash'),
+(16,16,150,'UPI'),(17,17,390,'Card'),(18,18,240,'UPI'),(19,19,520,'Cash'),(20,20,310,'UPI'),
+(21,21,280,'Card'),(22,22,260,'UPI'),(23,23,490,'UPI'),(24,24,650,'Cash'),(25,25,190,'UPI'),
+(26,26,330,'Card'),(27,27,210,'UPI'),(28,28,230,'UPI'),(29,29,700,'Cash'),(30,30,400,'UPI');
+
+# Driver Revenue Ranking Using Window Function
+SELECT d.name AS driver_name,
+       SUM(p.amount) AS total_earning,
+       RANK() OVER (ORDER BY SUM(p.amount) DESC) AS earning_rank
+FROM drivers d
+JOIN trips t ON d.driver_id = t.driver_id
+JOIN payments p ON t.trip_id = p.trip_id
+GROUP BY d.name;
+
+# Driver Performance Summary (Trips, Revenue, Rating)
+SELECT d.name AS driver_name,
+       COUNT(t.trip_id) AS total_trips,
+       SUM(p.amount) AS total_revenue,
+       AVG(d.rating) AS avg_rating
+FROM drivers d
+LEFT JOIN trips t ON d.driver_id = t.driver_id
+LEFT JOIN payments p ON t.trip_id = p.trip_id
+GROUP BY d.name;
+
+# Top 5 Riders by Total Spending
+SELECT r.name AS rider_name,
+       SUM(p.amount) AS total_spent,
+       COUNT(t.trip_id) AS trips_taken
+FROM riders r
+JOIN trips t ON r.rider_id = t.rider_id
+JOIN payments p ON t.trip_id = p.trip_id
+GROUP BY r.name
+ORDER BY total_spent DESC
+LIMIT 5;
+
+# Peak Hour Trip Demand Analysis
+SELECT HOUR(start_time) AS hour_of_day,
+       COUNT(*) AS total_trips
+FROM trips
+GROUP BY HOUR(start_time)
+ORDER BY total_trips DESC;
+
+ # City-wise Cancellation Rate Analysis
+SELECT city,
+       COUNT(CASE WHEN status='cancelled' THEN 1 END)*100.0/COUNT(*) AS cancel_percentage
+FROM trips
+GROUP BY city;
+
+#Monthly Revenue Trend Using CTE
+WITH monthly_revenue AS (
+    SELECT MONTH(start_time) AS month,
+           SUM(p.amount) AS revenue
+    FROM trips t
+    JOIN payments p ON t.trip_id = p.trip_id
+    GROUP BY MONTH(start_time)
+)
+SELECT * FROM monthly_revenue
+ORDER BY month;
+
+#Monthly Revenue Moving Average (3-Month Window)
+SELECT month,
+       revenue,
+       AVG(revenue) OVER (ORDER BY month ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS moving_avg
+FROM (
+    SELECT MONTH(start_time) AS month,
+           SUM(p.amount) AS revenue
+    FROM trips t
+    JOIN payments p ON t.trip_id = p.trip_id
+    GROUP BY MONTH(start_time)
+) t;
+
+#City Revenue Ranking Using Dense Rank
+SELECT city, revenue
+FROM (
+    SELECT t.city, SUM(p.amount) AS revenue,
+           DENSE_RANK() OVER (ORDER BY SUM(p.amount) DESC) AS rnk
+    FROM trips t
+    JOIN payments p ON t.trip_id = p.trip_id
+    GROUP BY t.city
+) x;
+
+#Repeat Riders Identification (Retention Analysis)
+SELECT rider_id, COUNT(trip_id) AS trips_taken
+FROM trips
+GROUP BY rider_id
+HAVING COUNT(trip_id) > 1
+ORDER BY trips_taken DESC;
+
+#Longest Trip Distance by City
+SELECT city, MAX(distance_km) AS longest_trip_km
+FROM trips
+GROUP BY city;
+
+#City Revenue Contribution Percentage
+SELECT t.city,
+       SUM(p.amount) * 100.0 / (SELECT SUM(amount) FROM payments) AS revenue_percentage
+FROM trips t
+JOIN payments p ON t.trip_id = p.trip_id
+GROUP BY t.city;
+
+#Driver Tenure vs Total Revenue Analysis
+SELECT d.name,
+       DATEDIFF(CURDATE(), d.join_date)/365 AS years_with_company,
+       SUM(p.amount) AS total_revenue
+FROM drivers d
+JOIN trips t ON d.driver_id = t.driver_id
+JOIN payments p ON t.trip_id = p.trip_id
+GROUP BY d.name;
+
+
+# Highest Revenue Day Detection
+SELECT DATE(start_time) AS day,
+       SUM(p.amount) AS revenue
+FROM trips t
+JOIN payments p ON t.trip_id = p.trip_id
+GROUP BY DATE(start_time)
+ORDER BY revenue DESC
+LIMIT 1;
+
+#Surge Pricing Simulation Based on Peak Hours
+SELECT trip_id,
+       distance_km,
+       CASE 
+           WHEN HOUR(start_time) BETWEEN 18 AND 22 THEN amount * 1.5
+           ELSE amount
+       END AS surge_price
+FROM trips t
+JOIN payments p ON t.trip_id = p.trip_id;
+
+#Drivers With Zero Trips (Inactive Drivers)
+SELECT d.name
+FROM drivers d
+LEFT JOIN trips t ON d.driver_id = t.driver_id
+WHERE t.trip_id IS NULL;
+
+# Daily Revenue Running Total (Cumulative Revenue)
+SELECT DATE(start_time) AS day,
+       SUM(p.amount) AS daily_revenue,
+       SUM(SUM(p.amount)) OVER (ORDER BY DATE(start_time)) AS running_total
+FROM trips t
+JOIN payments p ON t.trip_id = p.trip_id
+GROUP BY DATE(start_time);
+
+#  Top Earning Driver in Each City (Subquery Method)
+SELECT city, driver_name, MAX(total_earning) AS top_earning
+FROM (
+    SELECT t.city, d.name AS driver_name, SUM(p.amount) AS total_earning
+    FROM drivers d
+    JOIN trips t ON d.driver_id = t.driver_id
+    JOIN payments p ON t.trip_id = p.trip_id
+    GROUP BY t.city, d.name
+) x
+GROUP BY city;
+SELECT city, AVG(distance_km) AS avg_trip_distance
+FROM trips
+GROUP BY city;
+
+
+SELECT city, rider_name, trips_taken
+FROM (
+    SELECT t.city, r.name AS rider_name, COUNT(t.trip_id) AS trips_taken,
+           RANK() OVER (PARTITION BY t.city ORDER BY COUNT(t.trip_id) DESC) AS rnk
+    FROM trips t
+    JOIN riders r ON t.rider_id = r.rider_id
+    GROUP BY t.city, r.name
+) x
+WHERE rnk <= 3;
+
+
+
+SELECT d.name,
+       COUNT(t.trip_id) AS total_trips,
+       SUM(p.amount) AS total_revenue,
+       AVG(d.rating) AS avg_rating,
+       (SUM(p.amount)/COUNT(t.trip_id))*AVG(d.rating) AS performance_index
+FROM drivers d
+JOIN trips t ON d.driver_id = t.driver_id
+JOIN payments p ON t.trip_id = p.trip_id
+GROUP BY d.name
+ORDER BY performance_index DESC;
+
+SELECT d.name,
+       AVG(daily_revenue) AS avg_daily_revenue
+FROM (
+    SELECT d.driver_id, d.name, DATE(t.start_time) AS day, SUM(p.amount) AS daily_revenue
+    FROM drivers d
+    JOIN trips t ON d.driver_id = t.driver_id
+    JOIN payments p ON t.trip_id = p.trip_id
+    GROUP BY d.driver_id, d.name, DATE(t.start_time)
+) x
+GROUP BY name;
+
+SELECT t.trip_id,
+       t.distance_km,
+       p.amount AS original_amount,
+       CASE 
+           WHEN HOUR(t.start_time) BETWEEN 18 AND 22 THEN p.amount * 1.5
+           ELSE p.amount
+       END AS surge_price
+FROM trips t
+JOIN payments p ON t.trip_id = p.trip_id;
+
+SELECT x.city, x.driver_name, x.total_earning
+FROM (
+    SELECT t.city, d.name AS driver_name, SUM(p.amount) AS total_earning
+    FROM drivers d
+    JOIN trips t ON d.driver_id = t.driver_id
+    JOIN payments p ON t.trip_id = p.trip_id
+    GROUP BY t.city, d.name
+) x
+JOIN (
+    SELECT city, MAX(total_earning) AS max_earning
+    FROM (
+        SELECT t.city, d.name AS driver_name, SUM(p.amount) AS total_earning
+        FROM drivers d
+        JOIN trips t ON d.driver_id = t.driver_id
+        JOIN payments p ON t.trip_id = p.trip_id
+        GROUP BY t.city, d.name
+    ) y
+    GROUP BY city
+) m ON x.city = m.city AND x.total_earning = m.max_earning;
+
+SELECT city, ROUND(AVG(distance_km), 2) AS avg_trip_distance
+FROM trips
+GROUP BY city;
+SELECT driver_name,
+       ROUND(AVG(daily_revenue),2) AS avg_daily_revenue
+FROM (
+    SELECT d.driver_id, d.name AS driver_name, DATE(t.start_time) AS day,
+           SUM(p.amount) AS daily_revenue
+    FROM drivers d
+    JOIN trips t ON d.driver_id = t.driver_id
+    JOIN payments p ON t.trip_id = p.trip_id
+    GROUP BY d.driver_id, d.name, DATE(t.start_time)
+) x
+GROUP BY driver_name
+ORDER BY avg_daily_revenue DESC;
+
+#Average Daily Revenue per Driver
+SELECT 
+    d.name AS driver_name,
+    TIMESTAMPDIFF(YEAR, d.join_date, CURDATE()) AS years_with_company,
+    COALESCE(SUM(p.amount), 0) AS total_revenue
+FROM drivers d
+LEFT JOIN trips t ON d.driver_id = t.driver_id
+LEFT JOIN payments p ON t.trip_id = p.trip_id
+GROUP BY d.driver_id, d.name
+ORDER BY total_revenue DESC;
